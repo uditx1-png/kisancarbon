@@ -1,0 +1,1 @@
+A carbon footprint tracker for Indian farmers. Built in 30 days.
