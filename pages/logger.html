@@ -1,101 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logger - KisanCarbon</title>
-
-  <link rel="stylesheet" href="css/global.css" />
-  <link rel="stylesheet" href="css/logger.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KisanCarbon — Log Activity</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/logger.css">
 </head>
 <body>
 
-  <header class="topbar">
-    <h1>KisanCarbon Logger</h1>
-    <p>Track your farm activity and estimate carbon footprint</p>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo-icon">🌾</div>
+      <div class="brand-text">
+        <h1 data-key="appName">KisanCarbon</h1>
+        <p data-key="appSubtitle">Daily Activity Logger</p>
+      </div>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn"        onclick="setLang('hi')">हिं</button>
+    </div>
   </header>
 
-  <nav class="navbar">
-    <a href="index.html">Home</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="history.html">History</a>
-    <a href="tips.html">Tips</a>
-  </nav>
+  <main class="page-main">
 
-  <main class="logger-container">
+    <!-- DATE -->
+    <div class="date-row">
+      <span>📅</span>
+      <label data-key="dateLabel">Date of activity</label>
+      <input type="date" id="actDate">
+    </div>
 
-    <section class="form-card">
-      <h2>Farm Activity Entry</h2>
+    <!-- FERTILIZER SECTION -->
+    <div class="section-label">
+      <div class="section-icon icon-green">🌱</div>
+      <div>
+        <h2 data-key="fertTitle">Fertilizer used</h2>
+        <p data-key="fertSub">Log urea and DAP applied today</p>
+      </div>
+    </div>
 
-      <form id="loggerForm">
-
-        <div class="form-group">
-          <label for="farmerName">Farmer Name</label>
-          <input type="text" id="farmerName" placeholder="Enter farmer name" />
+    <div class="card">
+      <div class="input-row">
+        <div class="field">
+          <label data-key="ureaLabel">Urea fertilizer</label>
+          <input type="number" id="urea" min="0" max="500"
+                 step="0.5" placeholder="0"
+                 oninput="updatePreview()">
         </div>
-
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input type="date" id="date" />
+        <span class="unit-badge">kg</span>
+      </div>
+      <div class="input-row">
+        <div class="field">
+          <label data-key="dapLabel">DAP / other fertilizer</label>
+          <input type="number" id="dap" min="0" max="500"
+                 step="0.5" placeholder="0"
+                 oninput="updatePreview()">
         </div>
+        <span class="unit-badge">kg</span>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label for="acres">Land Area (Acres)</label>
-          <input type="number" id="acres" placeholder="Enter acres" />
+    <!-- DIESEL SECTION -->
+    <div class="section-label">
+      <div class="section-icon icon-amber">⛽</div>
+      <div>
+        <h2 data-key="dieselTitle">Diesel / fuel used</h2>
+        <p data-key="dieselSub">Tractor and generator fuel</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="input-row">
+        <div class="field">
+          <label data-key="tractorLabel">Tractor diesel</label>
+          <input type="number" id="tractorDiesel" min="0"
+                 max="300" step="0.5" placeholder="0"
+                 oninput="updatePreview()">
         </div>
-
-        <div class="form-group">
-          <label for="urea">Urea Used (kg)</label>
-          <input type="number" id="urea" placeholder="Enter urea quantity" />
+        <span class="unit-badge">liters</span>
+      </div>
+      <div class="input-row">
+        <div class="field">
+          <label data-key="genLabel">Generator diesel</label>
+          <input type="number" id="genDiesel" min="0"
+                 max="200" step="0.5" placeholder="0"
+                 oninput="updatePreview()">
         </div>
+        <span class="unit-badge">liters</span>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label for="dap">DAP Used (kg)</label>
-          <input type="number" id="dap" placeholder="Enter DAP quantity" />
+    <!-- WATER SECTION -->
+    <div class="section-label">
+      <div class="section-icon icon-blue">💧</div>
+      <div>
+        <h2 data-key="pumpTitle">Water pumping</h2>
+        <p data-key="pumpSub">Electric pump hours today</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="input-row">
+        <div class="field">
+          <label data-key="pumpHrsLabel">Pump hours</label>
+          <input type="number" id="pumpHrs" min="0"
+                 max="24" step="0.5" placeholder="0"
+                 oninput="updatePreview()">
         </div>
-
-        <div class="form-group">
-          <label for="diesel">Diesel Used (litres)</label>
-          <input type="number" id="diesel" placeholder="Enter diesel used" />
-        </div>
-
-        <div class="form-group">
-          <label for="pumpHours">Pump Usage (hours)</label>
-          <input type="number" id="pumpHours" placeholder="Enter pump hours" />
-        </div>
-
-        <div class="form-group">
-          <label for="irrigation">Irrigation Type</label>
-          <select id="irrigation">
-            <option value="">Select irrigation type</option>
-            <option value="flood">Flood Irrigation</option>
-            <option value="drip">Drip Irrigation</option>
-            <option value="sprinkler">Sprinkler Irrigation</option>
+        <span class="unit-badge">hrs</span>
+      </div>
+      <div class="input-row">
+        <div class="field">
+          <label data-key="pumpHPLabel">Motor size</label>
+          <select id="pumpHP" onchange="updatePreview()">
+            <option value="1">1 HP</option>
+            <option value="2">2 HP</option>
+            <option value="3" selected>3 HP</option>
+            <option value="5">5 HP</option>
+            <option value="7.5">7.5 HP</option>
           </select>
         </div>
-
-        <button type="button" class="save-btn">Save Entry</button>
-      </form>
-    </section>
-
-    <section class="preview-card">
-      <h2>Estimated CO₂ Preview</h2>
-      <div class="co2-box">
-        <p>Total Emission</p>
-        <h3 id="co2Preview">0.00 kg CO₂</h3>
       </div>
-
-      <div class="note-box">
-        <p>This preview will update when we add calculation logic.</p>
-      </div>
-    </section>
-
-    <div id="successMessage" class="success-message">
-      Entry saved successfully!
     </div>
+
+    <!-- CO2 PREVIEW -->
+    <div class="co2-preview" id="co2Preview">
+      <h3 data-key="co2Label">Estimated CO₂ today</h3>
+      <div class="co2-number">
+        <span id="co2Total">0.0</span>
+        <span class="co2-unit">kg CO₂</span>
+      </div>
+      <div class="co2-chips">
+        <div class="chip"><span class="dot dot-green"></span>
+          <span id="chipFert">Fertilizer: 0.0 kg</span></div>
+        <div class="chip"><span class="dot dot-amber"></span>
+          <span id="chipDiesel">Diesel: 0.0 kg</span></div>
+        <div class="chip"><span class="dot dot-blue"></span>
+          <span id="chipPump">Pump: 0.0 kg</span></div>
+      </div>
+    </div>
+
+    <!-- SAVE BUTTON -->
+    <button class="btn btn-primary save-btn"
+            id="saveBtn" onclick="handleSave()">
+      🌿 <span data-key="saveLabel">Save Today's Log</span>
+    </button>
 
   </main>
 
-  <script src="js/logger.js"></script>
+  <!-- SUCCESS TOAST -->
+  <div class="toast" id="toast">
+    ✅ <span data-key="savedMsg">Log saved!</span>
+  </div>
+
+  <script src="../js/calculator.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/lang.js"></script>
+  <script>
+    document.getElementById('actDate').value =
+      new Date().toISOString().split('T')[0];
+
+    function updatePreview() {
+      const result = calcTotal({
+        ureaKg:   parseFloat(document.getElementById('urea').value)          || 0,
+        dapKg:    parseFloat(document.getElementById('dap').value)           || 0,
+        tractorL: parseFloat(document.getElementById('tractorDiesel').value) || 0,
+        genL:     parseFloat(document.getElementById('genDiesel').value)     || 0,
+        pumpHrs:  parseFloat(document.getElementById('pumpHrs').value)       || 0,
+        pumpHP:   parseFloat(document.getElementById('pumpHP').value)        || 3
+      });
+      document.getElementById('co2Total').textContent   = result.total;
+      document.getElementById('chipFert').textContent   = 'Fertilizer: ' + result.fertilizer + ' kg';
+      document.getElementById('chipDiesel').textContent = 'Diesel: '     + result.diesel     + ' kg';
+      document.getElementById('chipPump').textContent   = 'Pump: '       + result.pump       + ' kg';
+    }
+
+    function handleSave() {
+      const allZero = ['urea','dap','tractorDiesel','genDiesel','pumpHrs']
+        .every(id => !parseFloat(document.getElementById(id).value));
+      if (allZero) {
+        alert('Please enter at least one activity before saving.');
+        return;
+      }
+      const result = calcTotal({
+        ureaKg:   parseFloat(document.getElementById('urea').value)          || 0,
+        dapKg:    parseFloat(document.getElementById('dap').value)           || 0,
+        tractorL: parseFloat(document.getElementById('tractorDiesel').value) || 0,
+        genL:     parseFloat(document.getElementById('genDiesel').value)     || 0,
+        pumpHrs:  parseFloat(document.getElementById('pumpHrs').value)       || 0,
+        pumpHP:   parseFloat(document.getElementById('pumpHP').value)        || 3
+      });
+      saveLog({
+        date:      document.getElementById('actDate').value,
+        ureaKg:    parseFloat(document.getElementById('urea').value)          || 0,
+        dapKg:     parseFloat(document.getElementById('dap').value)           || 0,
+        tractorL:  parseFloat(document.getElementById('tractorDiesel').value) || 0,
+        genL:      parseFloat(document.getElementById('genDiesel').value)     || 0,
+        pumpHrs:   parseFloat(document.getElementById('pumpHrs').value)       || 0,
+        pumpHP:    parseFloat(document.getElementById('pumpHP').value)        || 3,
+        fertCO2:   result.fertilizer,
+        dieselCO2: result.diesel,
+        pumpCO2:   result.pump,
+        co2:       result.total,
+        ts:        Date.now()
+      });
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+      ['urea','dap','tractorDiesel','genDiesel','pumpHrs'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      updatePreview();
+    }
+  </script>
+
 </body>
 </html>
